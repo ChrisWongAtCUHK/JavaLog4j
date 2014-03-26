@@ -5,7 +5,7 @@
 	<!-- Set up the properties -->
 	<target name="setProperties" description="set up properties">
 		<property name="project-name"       		value="Log4jInJava"/>
-        <property name="main-class"  				value="Log4jExample"/>
+        <property name="main-class"  				value="Log4JExample"/>
         <property name="base-dir"           		value="bin"/>
 		<property name="deploy-dir"          	 	value="deploy"/>
         <property name="javadoc-dir"       			value="doc"/>
@@ -58,6 +58,9 @@
 	<!-- Compile source files -->
     <target name="compile" depends="prepare">
 		<javac srcdir="${src-dir}" destdir="${base-dir}" includeantruntime="false">
+			<classpath>
+				<pathelement location="${log4j.jar}"/>
+			</classpath>
 		</javac>
     </target>
 	
@@ -69,18 +72,27 @@
             	<attribute name="Created-By" value="Chris Wong" />
             	<attribute name="Main-Class" value="${main-class}" />
             </manifest>
+        	<zipfileset dir="." includes="${log4j.jar}" fullpath="${log4j.jar}"/>
         </jar>
     </target>
 	
 	<!-- Run ${main-class} independently -->
 	<target name="run" depends="compile">
-        <java fork="true" classname="${main-class}" classpath="${base-dir}" >
+        <java fork="true" classname="${main-class}" >
+        	<classpath>
+        		<pathelement location="${base-dir}"/>
+        		<pathelement location="${log4j.jar}"/>
+        	</classpath>
         </java>
     </target>
 
 	<!-- Run by jar -->
 	<target name="jar" depends="build">
-		<java fork="true" failonerror="true" jar="deploy/${project-name}.jar" >
+		<echo>${log4j.jar}</echo>
+		<java fork="true" failonerror="true" jar="${deploy-dir}/${project-name}.jar" >
+			<classpath>
+        		<pathelement location="./${log4j.jar}"/>
+        	</classpath>
 		</java>
     </target>
 	
@@ -99,10 +111,8 @@
 	<!-- Help menu -->
 	<target name="help" description="help information" depends="check">
 		<echo>Sample cmd: ant run</echo>
-		<echo>	alias to java -cp ${base-dir} ${main-class}</echo>
+		<echo>	alias to java -cp ${base-dir};${log4j.jar} ${main-class}</echo>
 		<echo>Sample cmd: ant jar</echo>
-		<echo>	alias to java -jar ${deploy-dir}\${project-name}.jar</echo>
-		<echo>Sample cmd: ant help</echo>
-		<echo>${env.JAVA_HOME}</echo>
+		<echo>	alias to java -jar ${deploy-dir}\${project-name}.jar -cp ${log4j.jar}</echo>
 	</target>
 </project>
