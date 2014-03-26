@@ -1,8 +1,9 @@
 import org.apache.log4j.Logger;
 
 /**
- * A simple Java Log4j example class.
- * 
+ * <p>
+ * <a href="http://www.tutorialspoint.com/log4j/log4j_sample_program.htm">Log4JExample</a>
+ * </p>
  */
 public class Log4JExample {
 
